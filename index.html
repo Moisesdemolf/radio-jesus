@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Radio Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #1a1a1a, #4a4a4a);
+            color: white;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        #playPauseBtn {
+            font-size: 1.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #playPauseBtn:hover {
+            background-color: #f50057;
+        }
+        #volumeControl {
+            width: 200px;
+            margin-top: 1rem;
+        }
+        .equalizer {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 50px;
+            margin-top: 1rem;
+        }
+        .bar {
+            width: 10px;
+            background-color: #ff4081;
+            margin: 0 2px;
+            transition: height 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mi Radio Online</h1>
+        <button id="playPauseBtn">▶ Reproducir</button>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+        <div class="equalizer">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+
+    <script>
+        const audio = new Audio('http://s7.voscast.com:7618/;stream1723602804503/1');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeControl = document.getElementById('volumeControl');
+        const bars = document.querySelectorAll('.bar');
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        volumeControl.addEventListener('input', adjustVolume);
+
+        function togglePlayPause() {
+            if (audio.paused) {
+                audio.play();
+                playPauseBtn.textContent = '⏸ Pausar';
+                animateEqualizer();
+            } else {
+                audio.pause();
+                playPauseBtn.textContent = '▶ Reproducir';
+                stopEqualizerAnimation();
+            }
+        }
+
+        function adjustVolume() {
+            audio.volume = volumeControl.value;
+        }
+
+        function animateEqualizer() {
+            bars.forEach(bar => {
+                const height = Math.random() * 50;
+                bar.style.height = `${height}px`;
+            });
+            if (!audio.paused) {
+                requestAnimationFrame(animateEqualizer);
+            }
+        }
+
+        function stopEqualizerAnimation() {
+            bars.forEach(bar => {
+                bar.style.height = '0px';
+            });
+        }
+    </script>
+</body>
+</html>
